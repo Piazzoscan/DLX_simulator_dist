@@ -2,7 +2,7 @@ import {Injector, Input, Inject, Injectable} from '@angular/core';
 import {LogicalNetwork} from './logical-network';
 
 @Injectable()
-export class StartLogicalNetwork extends LogicalNetwork {
+export class FFDLogicalNetwork extends LogicalNetwork {
   //ffd( name, d, a_res, a_set, clk)
   //mux( zero, one, sel)
   //tri( in, en )
@@ -10,13 +10,13 @@ export class StartLogicalNetwork extends LogicalNetwork {
 
 
   constructor(cs_read: number, cs_write: number, injector: Injector) {
-    super('Start', cs_read, cs_write);
-    super.devType = "Start";
+    super('FF-D', cs_read, cs_write);
+    super.devType = "FF-D";
     this.ffd_a_res = false;
     this.ffd_a_set = true;
     this.cs = [];
-    this.setCS("cs_read_start",this.min_address,1);
-    this.setCS("cs_set_start",this.min_address + 0x00000001,1);
+    this.setCS("cs_read_ff",this.min_address,1);
+    this.setCS("cs_set_ff",this.min_address + 0x00000001,1);
   }
 
   public load(address: number): number {
@@ -25,7 +25,7 @@ export class StartLogicalNetwork extends LogicalNetwork {
     if(cs==null) res = super.load(address);
     else {
       switch(cs.id) {
-        case "cs_read_start":
+        case "cs_read_ff":
           res = this.ffd_q ? 1 : 0;
       }
     }
@@ -38,7 +38,7 @@ export class StartLogicalNetwork extends LogicalNetwork {
     if(cs==null) return super.store(address,word);
     else {
       switch(cs.id) {
-        case "cs_set_start":
+        case "cs_set_ff":
           this.ffd_q = (word & 0x1) == 0x1;
           break;
       }
